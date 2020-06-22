@@ -98,8 +98,8 @@ class CallController extends Controller
 
             $response  = '<?xml version="1.0" encoding="UTF-8"?>';
             $response .= '<Response>';
-            $response .= '<GetDigits finishOnKey="#">';
-            $response .= '<Say>Press 1 to continue with the audit</Say>';
+            $response .= '<GetDigits finishOnKey="#" >';
+            $response .= '<Say>Press 1 followed by the hash sign to continue with the audit</Say>';
             $response .= '</GetDigits>';
             $response .= '</Response>';
 
@@ -113,7 +113,8 @@ class CallController extends Controller
 
     public function events(Request $request)
     {
-        Log::info($request);
+        Log::warning($request);
+
         $confirmation = $_POST['dtmfDigits'];
 
         if ($confirmation  === 1) {
