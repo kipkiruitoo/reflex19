@@ -133,21 +133,5 @@ class CallController extends Controller
     public function events(Request $request)
     {
         Log::warning($request);
-
-        $confirmation = $_POST['dtmfDigits'];
-
-        if ($confirmation  === 1) {
-            $call = Call::where('session_id', $request->sessionId)->first();
-            $othernumber = $call->CalledNumber;
-
-            $response  = '<?xml version="1.0" encoding="UTF-8"?>';
-            $response .= '<Response>';
-            $response .= '<Dial record="true" sequential="true" phoneNumbers="' . $othernumber . '"  />';
-            $response .= '</Response>';
-
-            // Print the response onto the page so that our gateway can read it
-            header('Content-type: application/xml');
-            echo $response;
-        }
     }
 }
