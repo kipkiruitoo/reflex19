@@ -74,7 +74,7 @@ class CallController extends Controller
 
             if ($call->save()) {
                 $response = array("status" => 'success', $stringBody);
-                return json_decode($response);
+                return json_encode($response);
             }
 
             // print_r($results);
