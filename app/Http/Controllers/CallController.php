@@ -87,25 +87,44 @@ class CallController extends Controller
 
     public function callback(Request $request)
     {
-        Log::info($request);
+        // Log::info($request);
         $isActive  = $request->isActive;
         if ($isActive == 1) {
 
+            if (isset($_POST['dtmfDigits'])) {
+                # code...
+                $confirmation = $_POST['dtmfDigits'];
 
+                if ($confirmation  == 1) {
+                    $call = Call::where('session_id', $request->sessionId)->first();
+                    $othernumber = $call->CalledNumber;
+
+                    $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+                    $response .= '<Response>';
+                    $response .= '<Dial record="true" sequential="true" phoneNumbers="' . $othernumber . '"  />';
+                    $response .= '</Response>';
+
+                    // Print the response onto the page so that our gateway can read it
+                    header('Content-type: application/xml');
+                    echo $response;
+                }
+            } else {
+                $response  = '<?xml version="1.0" encoding="UTF-8"?>';
+                $response .= '<Response>';
+                $response .= '<GetDigits finishOnKey="#" >';
+                $response .= '<Say>Press 1 followed by the hash sign to continue with the audit</Say>';
+                $response .= '</GetDigits>';
+                $response .= '</Response>';
+
+                // Print the response onto the page so that our gateway can read it
+                header('Content-type: application/xml');
+                echo $response;
+            }
 
             // DB::table('calls')->where('session_id',  $request->sessionId)->update(['status' => 'Active']);
 
 
-            $response  = '<?xml version="1.0" encoding="UTF-8"?>';
-            $response .= '<Response>';
-            $response .= '<GetDigits finishOnKey="#" >';
-            $response .= '<Say>Press 1 followed by the hash sign to continue with the audit</Say>';
-            $response .= '</GetDigits>';
-            $response .= '</Response>';
 
-            // Print the response onto the page so that our gateway can read it
-            header('Content-type: application/xml');
-            echo $response;
         } else {
             DB::table('calls')->where('session_id',  $$request->sessionId)->update(['status' => 'Completed', 'recordinUrl' =>  $_POST['recordingUrl'], 'call_duration' => $_POST['dialDurationInSeconds'], 'duration' => $_POST['durationInSeconds'], 'amount' => $_POST['amount']]);
         }
