@@ -126,7 +126,7 @@ class CallController extends Controller
 
 
         } else {
-            DB::table('calls')->where('session_id',  $$request->sessionId)->update(['status' => 'Completed', 'recordinUrl' =>  $_POST['recordingUrl'], 'call_duration' => $_POST['dialDurationInSeconds'], 'duration' => $_POST['durationInSeconds'], 'amount' => $_POST['amount']]);
+            DB::table('calls')->where('session_id',  $request->sessionId)->update(['status' => 'Completed', 'recordinUrl' =>  $_POST['recordingUrl'], 'call_duration' => $_POST['dialDurationInSeconds'], 'duration' => $_POST['durationInSeconds'], 'amount' => $_POST['amount']]);
         }
     }
 
