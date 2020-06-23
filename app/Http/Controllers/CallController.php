@@ -34,7 +34,7 @@ class CallController extends Controller
         $from     = "+254711082033";
 
         // Set the numbers you want to call to in a comma-separated list
-        $to       =  $phonenumber;
+        $to       =  $othernumber;
 
         try {
             // Make the call
@@ -95,9 +95,9 @@ class CallController extends Controller
                 # code...
                 $confirmation = $_POST['dtmfDigits'];
 
-                if ($confirmation  == 1) {
+                if ($confirmation  == 5) {
                     $call = Call::where('session_id', $request->sessionId)->first();
-                    $othernumber = $call->CalledNumber;
+                    $othernumber = $call->callerNumber;
 
                     $response  = '<?xml version="1.0" encoding="UTF-8"?>';
                     $response .= '<Response>';
@@ -111,8 +111,8 @@ class CallController extends Controller
             } else {
                 $response  = '<?xml version="1.0" encoding="UTF-8"?>';
                 $response .= '<Response>';
-                $response .= '<GetDigits finishOnKey="#" >';
-                $response .= '<Say>Press 1 followed by the hash sign to continue with the audit</Say>';
+                $response .= '<GetDigits  >';
+                $response .= '<Play url="http://159.203.40.142:9856/play.mp3" />';
                 $response .= '</GetDigits>';
                 $response .= '</Response>';
 
@@ -132,6 +132,25 @@ class CallController extends Controller
 
     public function events(Request $request)
     {
-        Log::warning($request);
+        $session_id = $request->sessionId;
+        $call = Call::where('session_id', $session_id)->get()->first();
+
+        $response = array("date" => gmdate("Y-m-d\TH:i:s\Z"), 'status' => $request->callSessionState, 'requestId' => $request->clientRequestId, 'callleg1' => $call->callerNumber, 'callleg2' => $call->CalledNumber);
+
+        $client = new Client();
+        $resp =  $client->request('POST', 'https://voice.africastalking.com/call', [
+            'form_params' => $response,
+            'headers' => [
+                'User-Agent' => 'testing/1.0',
+                'Accept'     => 'application/json',
+                // 'username' => 'lexeme',
+                // 'apiKey' => $apiKey
+
+                // 'callLeg' => 'callee',
+                // 'holdMusicUrl' => 'http://206.189.235.13/hold.mp3'
+
+            ]
+        ]);
+        // Log::warning($request);
     }
 }
