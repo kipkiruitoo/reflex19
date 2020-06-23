@@ -111,7 +111,7 @@ class CallController extends Controller
             } else {
                 $response  = '<?xml version="1.0" encoding="UTF-8"?>';
                 $response .= '<Response>';
-                $response .= '<GetDigits  >';
+                $response .= '<GetDigits numDigits="1" >';
                 $response .= '<Play url="http://159.203.40.142:9856/play.mp3" />';
                 $response .= '</GetDigits>';
                 $response .= '</Response>';
