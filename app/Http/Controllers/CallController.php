@@ -138,7 +138,7 @@ class CallController extends Controller
         $response = array("date" => gmdate("Y-m-d\TH:i:s\Z"), 'status' => $request->callSessionState, 'requestId' => $request->clientRequestId, 'callleg1' => $call->callerNumber, 'callleg2' => $call->CalledNumber);
 
         $client = new Client();
-        $resp =  $client->request('POST', 'https://voice.africastalking.com/call', [
+        $resp =  $client->request('POST', 'http://41.212.23.118:50500/Reflex19WebApi', [
             'form_params' => $response,
             'headers' => [
                 'User-Agent' => 'testing/1.0',
